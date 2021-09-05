@@ -2,7 +2,8 @@ package main
 
 import (
 	"fmt"
-	"gin-api/controllers"
+	"gin-api/controllers/testController"
+	"gin-api/controllers/userController"
 	"gin-api/driver"
 
 	"github.com/gin-gonic/gin"
@@ -10,30 +11,10 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
-//[Go言語でデータベース（MySQL）に接続する方法 | Enjoy IT Life](https://nishinatoshiharu.com/connect-go-database/)
-
-type User struct {
-	ID    string
-	Name  string
-	Email string
-}
-
-// type Error struct {
-// 	Message string `json:"message"`
-// }
-
-// func SendError(w http.ResponseWriter, status int, err Error) {
-// 	w.WriteHeader(status)
-// 	json.NewEncoder(w).Encode(err)
-// }
-
-// func SendSuccess(w http.ResponseWriter, data interface{}) {
-// 	json.NewEncoder(w).Encode(data)
-// }
-
 func main() {
 
-	testController := controllers.TestController{}
+	testController := testController.TestController{}
+	userController := userController.UserController{}
 
 	db := driver.ConnectDB()
 
@@ -54,11 +35,15 @@ func main() {
 		fmt.Println(">>> create table ERROR!")
 	}
 
+	// test endpoints
 	router.GET("/test/", testController.Get(db))
-
 	router.POST("/test/add", testController.Add(db))
-
 	router.POST("/test/delete/:id", testController.Delete(db))
+
+	// user endpoints
+	router.GET("/user/", userController.Get(db))
+	router.POST("/user/", userController.Add(db))
+	router.DELETE("/user/", userController.Delete(db))
 
 	router.Run()
 }

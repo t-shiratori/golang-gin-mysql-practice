@@ -1,4 +1,4 @@
-package controllers
+package testController
 
 import (
 	"database/sql"
