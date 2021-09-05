@@ -1,16 +1,15 @@
-package userController
+package formController
 
 import (
 	"database/sql"
 	"fmt"
-	"net/http"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
 	_ "github.com/go-sql-driver/mysql"
 )
 
-type UserController struct{}
+type FormController struct{}
 
 type User struct {
 	ID    string
@@ -18,16 +17,7 @@ type User struct {
 	Email string
 }
 
-type JsonAddRequest struct {
-	Name  string `json:"name"`
-	Email string `json:"email"`
-}
-
-type JsonDeleteRequest struct {
-	ID string `json:"id"`
-}
-
-func (c UserController) Get(db *sql.DB) func(ctx *gin.Context) {
+func (c FormController) Get(db *sql.DB) func(ctx *gin.Context) {
 	return func(ctx *gin.Context) {
 
 		var users []User
@@ -52,25 +42,18 @@ func (c UserController) Get(db *sql.DB) func(ctx *gin.Context) {
 		fmt.Println("users")
 		fmt.Printf("%+v\n", users)
 
-		ctx.JSON(http.StatusOK, gin.H{
+		ctx.HTML(200, "index.html", gin.H{
 			"users": users,
 		})
 	}
 }
 
-func (c UserController) Add(db *sql.DB) func(ctx *gin.Context) {
+func (c FormController) Add(db *sql.DB) func(ctx *gin.Context) {
 	return func(ctx *gin.Context) {
 
-		var user User
-
-		var jsonReq JsonAddRequest
-
-		if err := ctx.ShouldBindJSON(&jsonReq); err != nil {
-			ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-			return
-		}
-
-		fmt.Println("create user " + jsonReq.Name + " with email " + jsonReq.Email)
+		name := ctx.PostForm("name")
+		email := ctx.PostForm("email")
+		fmt.Println("create user " + name + " with email " + email)
 
 		prepareDB, err := db.Prepare("insert into users (name, email) values(?,?);")
 
@@ -80,7 +63,7 @@ func (c UserController) Add(db *sql.DB) func(ctx *gin.Context) {
 			fmt.Println(">>> db Prepare Insert ERROR!")
 		}
 
-		result, err := prepareDB.Exec(jsonReq.Name, jsonReq.Email)
+		result, err := prepareDB.Exec(name, email)
 
 		if err != nil {
 			fmt.Println(">>> db Insert ERROR!")
@@ -94,25 +77,15 @@ func (c UserController) Add(db *sql.DB) func(ctx *gin.Context) {
 		}
 		fmt.Println(lastInsertID)
 
-		user.ID = strconv.FormatInt(lastInsertID, 10)
-		user.Name = jsonReq.Name
-		user.Email = jsonReq.Email
-
-		ctx.JSON(http.StatusOK, gin.H{
-			"user": user,
-		})
+		ctx.Redirect(302, "/test")
 	}
 }
 
-func (c UserController) Delete(db *sql.DB) func(ctx *gin.Context) {
+func (c FormController) Delete(db *sql.DB) func(ctx *gin.Context) {
 	return func(ctx *gin.Context) {
 
-		var jsonReq JsonDeleteRequest
-
-		if err := ctx.ShouldBindJSON(&jsonReq); err != nil {
-			ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-			return
-		}
+		param := ctx.Param("id")
+		id, err := strconv.Atoi(param)
 
 		prepareDB, err := db.Prepare("delete from users where id=?;")
 
@@ -122,7 +95,7 @@ func (c UserController) Delete(db *sql.DB) func(ctx *gin.Context) {
 
 		defer prepareDB.Close()
 
-		result, err := prepareDB.Exec(jsonReq.ID)
+		result, err := prepareDB.Exec(id)
 
 		if err != nil {
 			fmt.Println(">>> db delete ERROR!")
@@ -130,8 +103,6 @@ func (c UserController) Delete(db *sql.DB) func(ctx *gin.Context) {
 
 		fmt.Println(result)
 
-		ctx.JSON(http.StatusOK, gin.H{
-			"result": result,
-		})
+		ctx.Redirect(302, "/test")
 	}
 }

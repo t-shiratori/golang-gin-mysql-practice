@@ -2,8 +2,8 @@ package main
 
 import (
 	"fmt"
-	"gin-api/controllers/testController"
-	"gin-api/controllers/userController"
+	"gin-api/controllers/formController"
+	"gin-api/controllers/jsonController"
 	"gin-api/driver"
 
 	"github.com/gin-gonic/gin"
@@ -13,8 +13,8 @@ import (
 
 func main() {
 
-	testController := testController.TestController{}
-	userController := userController.UserController{}
+	formController := formController.FormController{}
+	jsonController := jsonController.JsonController{}
 
 	db := driver.ConnectDB()
 
@@ -35,15 +35,15 @@ func main() {
 		fmt.Println(">>> create table ERROR!")
 	}
 
-	// test endpoints
-	router.GET("/test/", testController.Get(db))
-	router.POST("/test/add", testController.Add(db))
-	router.POST("/test/delete/:id", testController.Delete(db))
+	// form endpoints
+	router.GET("/test/", formController.Get(db))
+	router.POST("/test/add", formController.Add(db))
+	router.POST("/test/delete/:id", formController.Delete(db))
 
-	// user endpoints
-	router.GET("/user/", userController.Get(db))
-	router.POST("/user/", userController.Add(db))
-	router.DELETE("/user/", userController.Delete(db))
+	// json endpoints
+	router.GET("/user/", jsonController.Get(db))
+	router.POST("/user/", jsonController.Add(db))
+	router.DELETE("/user/", jsonController.Delete(db))
 
 	router.Run()
 }
