@@ -43,6 +43,7 @@ func main() {
 	// json endpoints
 	router.GET("/user/", jsonController.Get(db))
 	router.POST("/user/", jsonController.Add(db))
+	router.PUT("/user/", jsonController.Update(db))
 	router.DELETE("/user/", jsonController.Delete(db))
 
 	router.Run()

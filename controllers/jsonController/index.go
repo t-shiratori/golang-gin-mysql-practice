@@ -23,6 +23,12 @@ type JsonAddRequest struct {
 	Email string `json:"email"`
 }
 
+type JsonUpdateRequest struct {
+	ID    string `json:"id"`
+	Name  string `json:"name"`
+	Email string `json:"email"`
+}
+
 type JsonDeleteRequest struct {
 	ID string `json:"id"`
 }
@@ -100,6 +106,48 @@ func (c JsonController) Add(db *sql.DB) func(ctx *gin.Context) {
 
 		ctx.JSON(http.StatusOK, gin.H{
 			"user": user,
+		})
+	}
+}
+
+func (c JsonController) Update(db *sql.DB) func(ctx *gin.Context) {
+	return func(ctx *gin.Context) {
+
+		var jsonReq JsonUpdateRequest
+
+		if err := ctx.ShouldBindJSON(&jsonReq); err != nil {
+			ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+
+		fmt.Println("update user name " + jsonReq.Name + " with email " + jsonReq.Email)
+
+		prepareDB, err := db.Prepare("update users set name = ?, email = ? where id = ?;")
+
+		defer prepareDB.Close()
+
+		if err != nil {
+			fmt.Println(">>> db Prepare Update ERROR!")
+		}
+
+		convertedId, err := strconv.ParseInt(jsonReq.ID, 10, 64)
+
+		result, err := prepareDB.Exec(jsonReq.Name, jsonReq.Email, convertedId)
+
+		if err != nil {
+			fmt.Println(">>> db Update ERROR!")
+		}
+
+		fmt.Println(result)
+
+		rowsAffected, err := result.RowsAffected()
+		if err != nil {
+			fmt.Println(">>> db get RowsAffected ERROR!")
+		}
+		fmt.Println("rowsAffected: " + strconv.FormatInt(rowsAffected, 10))
+
+		ctx.JSON(http.StatusOK, gin.H{
+			"user": jsonReq,
 		})
 	}
 }
