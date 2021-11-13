@@ -37,9 +37,9 @@ func main() {
 	}
 
 	// form endpoints
-	router.GET("/test/", formController.Get(db))
-	router.POST("/test/add", formController.Add(db))
-	router.POST("/test/delete/:id", formController.Delete(db))
+	router.GET("/form/", formController.Get(db))
+	router.POST("/form/add", formController.Add(db))
+	router.POST("/form/delete/:id", formController.Delete(db))
 
 	// json endpoints
 	router.GET("/user/", jsonController.Get(db))
