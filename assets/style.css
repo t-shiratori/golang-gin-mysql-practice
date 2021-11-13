@@ -1,0 +1,74 @@
+* {
+	margin: 0;
+	padding: 0;
+	font-size: 1rem;
+	font-weight: 400;
+}
+
+.wrapper {
+	margin: 0 auto;
+	padding: 30px;
+	max-width: 900px;
+}
+
+h1 {
+	margin: 0 0 1rem 0;
+}
+
+section {
+	padding: 10px;
+}
+
+section:not(:last-child) {
+	margin-bottom: 30px;
+}
+
+.formBlock {
+	margin: 0 0 10px 0;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.formBlock label {
+	flex-basis: 60px;
+}
+
+.formBlock input {
+	padding: 0.3rem 0.5rem;
+}
+
+.formBlock input::placeholder {
+	font-size: 0.8rem;
+	color: rgb(90, 90, 90);
+}
+
+.submitBlock {
+	margin: 30px 0 0 0;
+	display: flex;
+	justify-content: center;
+}
+
+table {
+	width: 100%;
+	text-align: center;
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
+table th {
+	padding: 0.5rem;
+	background: #e9faf9;
+	border: solid 1px #778ca3;
+}
+
+table td {
+	padding: 0.5rem;
+	border: solid 1px #778ca3;
+	text-align: right;
+}
+
+button {
+	cursor: pointer;
+	padding: 0.2rem 0.5rem;
+}

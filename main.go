@@ -22,6 +22,7 @@ func main() {
 
 	router := gin.Default()
 	router.LoadHTMLGlob("templates/*.html")
+	router.Static("/assets", "./assets")
 
 	fmt.Println("--> create table")
 
@@ -38,8 +39,10 @@ func main() {
 
 	// form endpoints
 	router.GET("/form/", formController.Get(db))
+	router.GET("/form/edit/:id", formController.Edit(db))
 	router.POST("/form/add", formController.Add(db))
 	router.POST("/form/delete/:id", formController.Delete(db))
+	router.POST("/form/update/:id", formController.Update(db))
 
 	// json endpoints
 	router.GET("/api/user/", jsonController.Get(db))

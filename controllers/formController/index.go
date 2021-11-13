@@ -3,7 +3,6 @@ package formController
 import (
 	"database/sql"
 	"fmt"
-	"strconv"
 
 	"github.com/gin-gonic/gin"
 	_ "github.com/go-sql-driver/mysql"
@@ -18,6 +17,7 @@ type User struct {
 }
 
 var rootPash = "/form"
+var editPash = "/form/edit"
 
 func (c FormController) Get(db *sql.DB) func(ctx *gin.Context) {
 	return func(ctx *gin.Context) {
@@ -89,8 +89,8 @@ func (c FormController) Add(db *sql.DB) func(ctx *gin.Context) {
 func (c FormController) Delete(db *sql.DB) func(ctx *gin.Context) {
 	return func(ctx *gin.Context) {
 
-		param := ctx.Param("id")
-		id, err := strconv.Atoi(param)
+		var user User
+		user.ID = ctx.Param("id")
 
 		prepareDB, err := db.Prepare("delete from users where id=?;")
 
@@ -100,10 +100,60 @@ func (c FormController) Delete(db *sql.DB) func(ctx *gin.Context) {
 
 		defer prepareDB.Close()
 
-		result, err := prepareDB.Exec(id)
+		result, err := prepareDB.Exec(user.ID)
 
 		if err != nil {
 			fmt.Println("--> db delete error")
+		}
+
+		fmt.Println(result)
+
+		ctx.Redirect(302, rootPash)
+	}
+}
+
+func (c FormController) Edit(db *sql.DB) func(ctx *gin.Context) {
+	return func(ctx *gin.Context) {
+
+		var user User
+		user.ID = ctx.Param("id")
+
+		row := db.QueryRow("select * from users where id = ?;", user.ID)
+
+		err := row.Scan(&user.ID, &user.Name, &user.Email)
+
+		if err != nil {
+			fmt.Println("--> db Scan error")
+		}
+
+		ctx.HTML(200, "edit.html", gin.H{
+			"user": user,
+		})
+	}
+}
+
+func (c FormController) Update(db *sql.DB) func(ctx *gin.Context) {
+	return func(ctx *gin.Context) {
+
+		var user User
+		user.ID = ctx.Param("id")
+		user.Name = ctx.PostForm("name")
+		user.Email = ctx.PostForm("email")
+
+		fmt.Printf("user %+v\n", user)
+
+		prepareDB, err := db.Prepare("update users set name = ?, email = ? where id = ?;")
+
+		if err != nil {
+			fmt.Println("--> db.Prepare() error")
+		}
+
+		defer prepareDB.Close()
+
+		result, err := prepareDB.Exec(user.Name, user.Email, user.ID)
+
+		if err != nil {
+			fmt.Println("--> db update error")
 		}
 
 		fmt.Println(result)
