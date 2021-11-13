@@ -14,7 +14,8 @@ docker-compose up -d
 ### Open Browser
 `http://localhost:8080/form/`
 
-<img width="500" alt="スクリーンショット 2021-11-13 18 41 19" src="https://user-images.githubusercontent.com/8470739/141614305-13a6b8c4-22c5-4ee3-8874-51465b14b60c.png">
+<img width="500" alt="スクリーンショット 2021-11-14 0 22 06" src="https://user-images.githubusercontent.com/8470739/141649331-48052cf3-2d0f-41fb-8b47-b3c653dee281.png">
+
 
 ### Open Postman
 
