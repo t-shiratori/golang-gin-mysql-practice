@@ -3,35 +3,112 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Sample App</title>
+    <title>Form Sample</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            font-weight: 400;
+        }
+
+        h1 {
+            margin: 0 0 1rem 0;
+        }
+
+        section {
+            margin: 0 auto 30px;
+            padding: 30px;
+            max-width: 900px;
+        }
+
+        .formBlock {
+            margin: 0 0 10px 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .formBlock label {
+            flex-basis: 60px;
+        }
+
+        .formBlock input {
+            padding: 0.3rem 0.5rem;
+            font-size: 1rem;
+        }
+
+        .submitBlock {
+            margin: 30px 0 0 0;
+            display: flex;
+            justify-content: center;
+        }
+
+        table {
+            width: 100%;
+            text-align: center;
+            border-collapse: collapse;
+            border-spacing: 0;
+        }
+
+        table th {
+            padding: 0.5rem;
+            background: #e9faf9;
+            border: solid 1px #778ca3;
+        }
+
+        table td {
+            padding: 0.5rem;
+            border: solid 1px #778ca3;
+            text-align: right;
+        }
+
+        button {
+            cursor: pointer;
+            padding: 0.2rem 0.5rem;
+        }
+    </style>
 </head>
 
 <body>
-    <h2>ユーザー追加</h2>
-    <form method="post" action="/test/add">
-        <p>名前<input type="text" name="name" size="30" placeholder="入力してください"></p>
-        <p>メールアドレス<input type="text" name="email" size="30" placeholder="入力してください"></p>
-        <p><input type="submit" value="Send"></p>
-    </form>
+    <section>
+        <h1>ユーザー追加</h1>
+        <form method="post" action="/test/add">
+            <div class="formBlock">
+                <label for="name">名前</label>
+                <input id="name" type="text" name="name" size="30" placeholder="入力してください">
+            </div>
+            <div class="formBlock">
+                <label for="email">メール</label>
+                <input id="email" type="email" name="email" size="30" autocomplete="email" placeholder="入力してください">
+            </div>
+            <div class="submitBlock">
+                <button type="submit">送信</button>
+            </div>
+        </form>
+    </section>
 
-    <h2>ユーザー一覧</h2>
-    <table>
-        <tr>
-            <td>名前</td>
-            <td>メールアドレス</td>
-        </tr>
-        {{ range .users }}
-        <tr>
-            <td>{{ .Name }}</td>
-            <td>{{ .Email }}</td>
-            <td>
-                <form method="post" action="/test/delete/{{.ID}}">
-                    <button type="submit">削除</button>
-                </form>
-            </td>
-        </tr>
-        {{ end }}
-        </ul>
+    <section>
+        <h1>ユーザー一覧</h1>
+        <table>
+            <tr>
+                <th>名前</th>
+                <th>email</th>
+                <th></th>
+            </tr>
+            {{ range .users }}
+            <tr>
+                <td>{{ .Name }}</td>
+                <td>{{ .Email }}</td>
+                <td>
+                    <form method="post" action="/test/delete/{{.ID}}">
+                        <button type="submit">削除</button>
+                    </form>
+                </td>
+            </tr>
+            {{ end }}
+        </table>
+    </section>
+
 </body>
 
 </html>
