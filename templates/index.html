@@ -8,7 +8,14 @@
         * {
             margin: 0;
             padding: 0;
+            font-size: 1rem;
             font-weight: 400;
+        }
+
+        .wrapper {
+            margin: 0 auto;
+            padding: 30px;
+            max-width: 900px;
         }
 
         h1 {
@@ -16,9 +23,11 @@
         }
 
         section {
-            margin: 0 auto 30px;
-            padding: 30px;
-            max-width: 900px;
+            padding: 10px;
+        }
+
+        section:not(:last-child) {
+            margin-bottom: 30px;
         }
 
         .formBlock {
@@ -34,7 +43,11 @@
 
         .formBlock input {
             padding: 0.3rem 0.5rem;
-            font-size: 1rem;
+        }
+
+        .formBlock input::placeholder {
+            font-size: 0.8rem;
+            color: rgb(90, 90, 90);
         }
 
         .submitBlock {
@@ -70,45 +83,45 @@
 </head>
 
 <body>
-    <section>
-        <h1>ユーザー追加</h1>
-        <form method="post" action="/test/add">
-            <div class="formBlock">
-                <label for="name">名前</label>
-                <input id="name" type="text" name="name" size="30" placeholder="入力してください">
-            </div>
-            <div class="formBlock">
-                <label for="email">メール</label>
-                <input id="email" type="email" name="email" size="30" autocomplete="email" placeholder="入力してください">
-            </div>
-            <div class="submitBlock">
-                <button type="submit">送信</button>
-            </div>
-        </form>
-    </section>
-
-    <section>
-        <h1>ユーザー一覧</h1>
-        <table>
-            <tr>
-                <th>名前</th>
-                <th>email</th>
-                <th></th>
-            </tr>
-            {{ range .users }}
-            <tr>
-                <td>{{ .Name }}</td>
-                <td>{{ .Email }}</td>
-                <td>
-                    <form method="post" action="/test/delete/{{.ID}}">
-                        <button type="submit">削除</button>
-                    </form>
-                </td>
-            </tr>
-            {{ end }}
-        </table>
-    </section>
-
+    <div class="wrapper">
+        <section>
+            <h1>ユーザー追加</h1>
+            <form method="post" action="/test/add">
+                <div class="formBlock">
+                    <label for="name">名前</label>
+                    <input id="name" type="text" name="name" size="30" placeholder="入力してください">
+                </div>
+                <div class="formBlock">
+                    <label for="email">メール</label>
+                    <input id="email" type="email" name="email" size="30" autocomplete="email" placeholder="入力してください">
+                </div>
+                <div class="submitBlock">
+                    <button type="submit">追加</button>
+                </div>
+            </form>
+        </section>
+        <section>
+            <h1>ユーザー一覧</h1>
+            <table>
+                <tr>
+                    <th>名前</th>
+                    <th>メール</th>
+                    <th></th>
+                </tr>
+                {{ range .users }}
+                <tr>
+                    <td>{{ .Name }}</td>
+                    <td>{{ .Email }}</td>
+                    <td>
+                        <form method="post" action="/test/delete/{{.ID}}">
+                            <button type="submit">削除</button>
+                        </form>
+                    </td>
+                </tr>
+                {{ end }}
+            </table>
+        </section>
+    </div>
 </body>
 
 </html>
