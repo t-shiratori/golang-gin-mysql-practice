@@ -94,9 +94,11 @@ func (c JsonController) Add(db *sql.DB) func(ctx *gin.Context) {
 		fmt.Println(result)
 
 		lastInsertID, err := result.LastInsertId()
+
 		if err != nil {
 			fmt.Println("--> result.LastInsertId() error")
 		}
+
 		fmt.Println(lastInsertID)
 
 		user.ID = strconv.FormatInt(lastInsertID, 10)
@@ -140,6 +142,7 @@ func (c JsonController) Update(db *sql.DB) func(ctx *gin.Context) {
 		fmt.Println(result)
 
 		rowsAffected, err := result.RowsAffected()
+
 		if err != nil {
 			fmt.Println("--> result.RowsAffected() error")
 		}
