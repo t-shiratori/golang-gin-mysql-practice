@@ -27,20 +27,19 @@ func (c FormController) Get(db *sql.DB) func(ctx *gin.Context) {
 		defer rows.Close()
 
 		if err != nil {
-			fmt.Println(">>> db Query ERROR!")
+			fmt.Println("--> db.Query() error")
 		}
 
 		for rows.Next() {
 			var user User
 			err := rows.Scan(&user.ID, &user.Name, &user.Email)
 			if err != nil && err != sql.ErrNoRows {
-				fmt.Println(">>> row Scan ERROR!")
+				fmt.Println("--> row.Scan() error")
 			}
 			users = append(users, user)
 		}
 
-		fmt.Println("users")
-		fmt.Printf("%+v\n", users)
+		fmt.Printf("users %+v\n", users)
 
 		ctx.HTML(200, "index.html", gin.H{
 			"users": users,
@@ -51,30 +50,34 @@ func (c FormController) Get(db *sql.DB) func(ctx *gin.Context) {
 func (c FormController) Add(db *sql.DB) func(ctx *gin.Context) {
 	return func(ctx *gin.Context) {
 
-		name := ctx.PostForm("name")
-		email := ctx.PostForm("email")
-		fmt.Println("create user " + name + " with email " + email)
+		var user User
+		user.Name = ctx.PostForm("name")
+		user.Email = ctx.PostForm("email")
+
+		fmt.Printf("user %+v\n", user)
 
 		prepareDB, err := db.Prepare("insert into users (name, email) values(?,?);")
 
 		defer prepareDB.Close()
 
 		if err != nil {
-			fmt.Println(">>> db Prepare Insert ERROR!")
+			fmt.Println("--> db.Prepare() error")
 		}
 
-		result, err := prepareDB.Exec(name, email)
+		result, err := prepareDB.Exec(user.Name, user.Email)
 
 		if err != nil {
-			fmt.Println(">>> db Insert ERROR!")
+			fmt.Println("--> db insert error")
 		}
 
 		fmt.Println(result)
 
 		lastInsertID, err := result.LastInsertId()
+
 		if err != nil {
-			fmt.Println(">>> db get lastInsertID ERROR!")
+			fmt.Println("--> result.LastInsertId() error")
 		}
+
 		fmt.Println(lastInsertID)
 
 		ctx.Redirect(302, "/test")
@@ -90,7 +93,7 @@ func (c FormController) Delete(db *sql.DB) func(ctx *gin.Context) {
 		prepareDB, err := db.Prepare("delete from users where id=?;")
 
 		if err != nil {
-			fmt.Println(">>> db Prepare delete ERROR!")
+			fmt.Println("--> db.Prepare() error")
 		}
 
 		defer prepareDB.Close()
@@ -98,7 +101,7 @@ func (c FormController) Delete(db *sql.DB) func(ctx *gin.Context) {
 		result, err := prepareDB.Exec(id)
 
 		if err != nil {
-			fmt.Println(">>> db delete ERROR!")
+			fmt.Println("--> db delete error")
 		}
 
 		fmt.Println(result)

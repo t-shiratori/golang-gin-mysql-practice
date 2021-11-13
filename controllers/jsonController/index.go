@@ -43,19 +43,18 @@ func (c JsonController) Get(db *sql.DB) func(ctx *gin.Context) {
 		defer rows.Close()
 
 		if err != nil {
-			fmt.Println(">>> db Query ERROR!")
+			fmt.Println("--> db.Query() error")
 		}
 
 		for rows.Next() {
 			var user User
 			err := rows.Scan(&user.ID, &user.Name, &user.Email)
 			if err != nil && err != sql.ErrNoRows {
-				fmt.Println(">>> row Scan ERROR!")
+				fmt.Println("--> rows.Scan() error")
 			}
 			users = append(users, user)
 		}
 
-		fmt.Println("users")
 		fmt.Printf("%+v\n", users)
 
 		ctx.JSON(http.StatusOK, gin.H{
@@ -76,27 +75,27 @@ func (c JsonController) Add(db *sql.DB) func(ctx *gin.Context) {
 			return
 		}
 
-		fmt.Println("create user " + jsonReq.Name + " with email " + jsonReq.Email)
+		fmt.Printf("%+v\n", jsonReq)
 
 		prepareDB, err := db.Prepare("insert into users (name, email) values(?,?);")
 
 		defer prepareDB.Close()
 
 		if err != nil {
-			fmt.Println(">>> db Prepare Insert ERROR!")
+			fmt.Println("--> db.Prepare() error")
 		}
 
 		result, err := prepareDB.Exec(jsonReq.Name, jsonReq.Email)
 
 		if err != nil {
-			fmt.Println(">>> db Insert ERROR!")
+			fmt.Println("--> db insert error")
 		}
 
 		fmt.Println(result)
 
 		lastInsertID, err := result.LastInsertId()
 		if err != nil {
-			fmt.Println(">>> db get lastInsertID ERROR!")
+			fmt.Println("--> result.LastInsertId() error")
 		}
 		fmt.Println(lastInsertID)
 
@@ -120,14 +119,14 @@ func (c JsonController) Update(db *sql.DB) func(ctx *gin.Context) {
 			return
 		}
 
-		fmt.Println("update user name " + jsonReq.Name + " with email " + jsonReq.Email)
+		fmt.Printf("%+v\n", jsonReq)
 
 		prepareDB, err := db.Prepare("update users set name = ?, email = ? where id = ?;")
 
 		defer prepareDB.Close()
 
 		if err != nil {
-			fmt.Println(">>> db Prepare Update ERROR!")
+			fmt.Println("--> db.Prepare() error")
 		}
 
 		convertedId, err := strconv.ParseInt(jsonReq.ID, 10, 64)
@@ -135,15 +134,16 @@ func (c JsonController) Update(db *sql.DB) func(ctx *gin.Context) {
 		result, err := prepareDB.Exec(jsonReq.Name, jsonReq.Email, convertedId)
 
 		if err != nil {
-			fmt.Println(">>> db Update ERROR!")
+			fmt.Println("--> db update error")
 		}
 
 		fmt.Println(result)
 
 		rowsAffected, err := result.RowsAffected()
 		if err != nil {
-			fmt.Println(">>> db get RowsAffected ERROR!")
+			fmt.Println("--> result.RowsAffected() error")
 		}
+
 		fmt.Println("rowsAffected: " + strconv.FormatInt(rowsAffected, 10))
 
 		ctx.JSON(http.StatusOK, gin.H{
@@ -162,10 +162,12 @@ func (c JsonController) Delete(db *sql.DB) func(ctx *gin.Context) {
 			return
 		}
 
+		fmt.Printf("%+v\n", jsonReq)
+
 		prepareDB, err := db.Prepare("delete from users where id=?;")
 
 		if err != nil {
-			fmt.Println(">>> db Prepare delete ERROR!")
+			fmt.Println("--> db.Prepare() error")
 		}
 
 		defer prepareDB.Close()
@@ -173,7 +175,7 @@ func (c JsonController) Delete(db *sql.DB) func(ctx *gin.Context) {
 		result, err := prepareDB.Exec(jsonReq.ID)
 
 		if err != nil {
-			fmt.Println(">>> db delete ERROR!")
+			fmt.Println("--> db delete error")
 		}
 
 		fmt.Println(result)
