@@ -42,10 +42,10 @@ func main() {
 	router.POST("/form/delete/:id", formController.Delete(db))
 
 	// json endpoints
-	router.GET("/user/", jsonController.Get(db))
-	router.POST("/user/", jsonController.Add(db))
-	router.PUT("/user/", jsonController.Update(db))
-	router.DELETE("/user/", jsonController.Delete(db))
+	router.GET("/api/user/", jsonController.Get(db))
+	router.POST("/api/user/", jsonController.Add(db))
+	router.PUT("/api/user/", jsonController.Update(db))
+	router.DELETE("/api/user/", jsonController.Delete(db))
 
 	router.Run()
 }
