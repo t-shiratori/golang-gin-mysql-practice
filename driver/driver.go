@@ -20,17 +20,18 @@ func ConnectDB() *sql.DB {
 	dsn := user + ":" + password + "@tcp(" + ip + ":" + port + ")/" + dbName + option
 	db, err := sql.Open("mysql", dsn)
 
-	fmt.Println("DB OPEN!")
+	fmt.Println("--> db open")
 
 	if err != nil {
-		fmt.Println("DB OPEN ERROR!")
+		fmt.Println("--> db open error")
 	}
 
-	fmt.Println("DB SEND PING!")
+	fmt.Println("--> db send ping")
 
 	err = db.Ping()
+
 	if err != nil {
-		fmt.Println("DB Ping ERROR!")
+		fmt.Println("--> db ping error")
 	}
 
 	return db
