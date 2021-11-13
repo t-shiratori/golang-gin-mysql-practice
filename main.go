@@ -23,7 +23,8 @@ func main() {
 	router := gin.Default()
 	router.LoadHTMLGlob("templates/*.html")
 
-	fmt.Println(">>> create table!")
+	fmt.Println("--> create table")
+
 	_, err := db.Exec(`
 		create table if not exists users (
 			id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, 
@@ -32,7 +33,7 @@ func main() {
 		);`)
 
 	if err != nil {
-		fmt.Println(">>> create table ERROR!")
+		fmt.Println("--> create table error")
 	}
 
 	// form endpoints
