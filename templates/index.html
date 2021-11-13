@@ -86,7 +86,7 @@
     <div class="wrapper">
         <section>
             <h1>ユーザー追加</h1>
-            <form method="post" action="/test/add">
+            <form method="post" action="/form/add">
                 <div class="formBlock">
                     <label for="name">名前</label>
                     <input id="name" type="text" name="name" size="30" placeholder="入力してください">
@@ -113,7 +113,7 @@
                     <td>{{ .Name }}</td>
                     <td>{{ .Email }}</td>
                     <td>
-                        <form method="post" action="/test/delete/{{.ID}}">
+                        <form method="post" action="/form/delete/{{.ID}}">
                             <button type="submit">削除</button>
                         </form>
                     </td>

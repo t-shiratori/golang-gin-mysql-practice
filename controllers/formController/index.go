@@ -17,6 +17,8 @@ type User struct {
 	Email string
 }
 
+var rootPash = "/form"
+
 func (c FormController) Get(db *sql.DB) func(ctx *gin.Context) {
 	return func(ctx *gin.Context) {
 
@@ -80,7 +82,7 @@ func (c FormController) Add(db *sql.DB) func(ctx *gin.Context) {
 
 		fmt.Println(lastInsertID)
 
-		ctx.Redirect(302, "/test")
+		ctx.Redirect(302, rootPash)
 	}
 }
 
@@ -106,6 +108,6 @@ func (c FormController) Delete(db *sql.DB) func(ctx *gin.Context) {
 
 		fmt.Println(result)
 
-		ctx.Redirect(302, "/test")
+		ctx.Redirect(302, rootPash)
 	}
 }
