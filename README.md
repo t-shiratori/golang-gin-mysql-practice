@@ -11,8 +11,8 @@ Golang、Gin、MySQL、Docker Compose
 docker-compose up -d
 ```
 
-### Client
+### Open Browser
 
-|Form Sample|RestApi endpoint|
+|Form Sample|RestApi Endpoint|
 |:-|:-|
 |`http://localhost:8080/form/`|`http://localhost:8080/api/user/`|
